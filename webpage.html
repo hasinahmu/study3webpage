@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>TheEffectOfImageGenreOnMemoryExperimentWebPage</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+* {
+  box-sizing: border-box;
+}
+
+video {
+  margin-top: 1%;
+  margin-left: 27%;
+  height: auto;
+  width: 600px;
+ 
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Style the header */
+header {
+  background-color: #6B2C90;
+  padding: 0.2px;
+  text-align: center;
+  font-size: 15px;
+  color: white;
+}
+
+
+/* Style the footer */
+footer {
+  background-color: #6B2C90;
+  padding: 0.5px;
+  text-align: center;
+  color: white;
+}
+
+/* Responsive layout - makes the two columns/boxes stack on top of each other instead of next to each other, on small screens */
+@media (max-width: 600px) {
+  nav, article {
+    width: 100%;
+    height: auto;
+  }
+}
+
+button {
+  border: #6B2C90;
+  border-radius: 25px;
+  color: white;
+  background-color: #6B2C90;
+  padding: 16px 32px;
+
+  text-align: center;
+  text-decoration:none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  margin-left: 40%;
+  transition-duration: 0.4s;
+  cursor: pointer;
+  top : 40px;
+right : 100px;
+}
+
+/* For mobile phones: */
+[class*="col-"] {
+  width: 100%;
+}
+
+@media only screen and (min-width: 600px) {
+  /* For tablets: */
+  .col-s-1 {width: 8.33%;}
+  .col-s-2 {width: 16.66%;}
+  .col-s-3 {width: 25%;}
+  .col-s-4 {width: 33.33%;}
+  .col-s-5 {width: 41.66%;}
+  .col-s-6 {width: 50%;}
+  .col-s-7 {width: 58.33%;}
+  .col-s-8 {width: 66.66%;}
+  .col-s-9 {width: 75%;}
+  .col-s-10 {width: 83.33%;}
+  .col-s-11 {width: 91.66%;}
+  .col-s-12 {width: 100%;}
+}
+@media only screen and (min-width: 768px) {
+  /* For desktop: */
+  .col-1 {width: 8.33%;}
+  .col-2 {width: 16.66%;}
+  .col-3 {width: 25%;}
+  .col-4 {width: 33.33%;}
+  .col-5 {width: 41.66%;}
+  .col-6 {width: 50%;}
+  .col-7 {width: 58.33%;}
+  .col-8 {width: 66.66%;}
+  .col-9 {width: 75%;}
+  .col-10 {width: 83.33%;}
+  .col-11 {width: 91.66%;}
+  .col-12 {width: 100%;}
+}
+
+input[type=text], select {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+div {
+  border-radius: 5px;
+  background-color: #f2f2f2;
+  padding: 20px;
+}
+
+</style>
+</head>
+<body>
+
+<h2><img src="uomlogo.png" alt="Logo" class="logo">
+      
+</h2>
+
+<header>
+  <h2>The Effect of Image Genre on Episodic Memory Experiment</h2>
+  <p> The Department of Computer Science </p>
+  <p> Hasinah Alzahrani, Dr. Sarah Clinch and Dr. Markel Vigo </p> 
+</header>
+
+
+<div class="embed-responsive embed-responsive-4by3">
+    <video class="embed-responsive-item" id="video" width="600" autoplay></video>
+</div>
+
+<div class="container h-100">
+        <div class="d-flex h-100">
+            <div class="align-self-start mr-auto">
+                <button type="button" class="btn btn-danger position-relative">
+                  Capture an image
+                </button>
+            </div>
+           
+            </div>
+            <div input type="text" id="userId" placeholder="Enter your user ID">
+        </div>
+    </div>
+    </div>
+
+<div>
+  <form action="/action_page.php">
+    <label for="fname">Email Address</label>
+    <input type="text" id="fname" name="firstname" placeholder="Enter your email">
+
+    <label for="lname">User ID</label>
+    <input type="text" id="lname" name="lastname" placeholder="Enter your user id">
+
+  </form>
+</div>
+
+<script>
+    function startWebcam(userId) {
+      var video = document.getElementById("video");
+      var constraints = {
+        video: {
+          facingMode: "user",
+          userId: userId
+        }
+      };
+      navigator.mediaDevices.getUserMedia(constraints).then(function(stream) {
+        video.srcObject = stream;
+      });
+    }
+    window.addEventListener("load", startWebcam);
+    
+    document.getElementById("capture").addEventListener("click", function() {
+      var canvas = document.createElement("canvas");
+      var ctx = canvas.getContext("2d");
+      video.currentTime = 0;
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      ctx.drawImage(video, 0, 0);
+      var img = new Image();
+      img.src = canvas.toDataURL();
+      img.onload = function() {
+        // Upload the picture to the server.
+        uploadPicture(img.src, userId);
+      };
+    });
+    
+    document.getElementById("switch-camera").addEventListener("click", function() {
+      var video = document.getElementById("video");
+      var currentFacingMode = video.facingMode;
+      var newFacingMode = currentFacingMode === "user" ? "environment" : "user";
+      var constraints = {
+        video: {
+          facingMode: newFacingMode
+        }
+      };
+      navigator.mediaDevices.getUserMedia(constraints).then(function(stream) {
+        video.srcObject = stream;
+      });
+    });
+    
+    function uploadPicture(pictureData, userId) {
+      var xhr = new XMLHttpRequest();
+      xhr.open("POST", "http://nasr.man.ac.uk/epsrss$/snapped/replicated/halzahrani", true);
+      xhr.setRequestHeader("Content-Type", "image/jpeg");
+      xhr.upload.addEventListener("progress", function(event) {
+        var progress = event.loaded / event.total * 100;
+        // Update the progress bar with the current progress.
+        document.getElementById("progress").value = progress;
+      }, false);
+      xhr.onload = function() {
+        if (xhr.status === 200) {
+          // The picture was uploaded successfully.
+          alert("Picture uploaded successfully!");
+        } else {
+          // An error occurred while uploading the picture.
+          alert("An error occurred while uploading the picture.");
+        }
+      };
+      xhr.send(pictureData);
+    }
+  </script>
+
+
+</body>
+</html>
